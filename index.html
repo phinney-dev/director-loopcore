@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Phinius Njeru, General Director | Loopcore Enterprises</title>
+<meta name="description" content="Phinius Njeru is the General Director of Loopcore Enterprises, providing internet, networking, software and cyber services in Kenya.">
+<meta property="og:title" content="Phinius Njeru, General Director | Loopcore Enterprises">
+<meta property="og:description" content="Internet, networking, software and cyber services you can rely on.">
+<meta property="og:image" content="assets/phinius-njeru.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#060a07;
+  --hedge:#2f7d32;
+  --hedge-soft:#8fc98a;
+  --sand:#d8c9a3;
+  --paper:#eef1ea;
+  --ink:#101812;
+  --muted:#5b665d;
+  --display:"Bricolage Grotesque","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;font-size:1.0625rem}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--hedge-soft);outline-offset:3px}
+.wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
+
+/* top bar */
+header.bar{position:absolute;inset:0 0 auto 0;z-index:5;padding-top:max(1rem,env(safe-area-inset-top))}
+header.bar .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.brand{font-family:var(--display);font-weight:800;font-size:1.05rem;letter-spacing:.02em;color:var(--paper);text-decoration:none}
+nav a{color:var(--paper);text-decoration:none;margin-left:1.4rem;font-size:.95rem;opacity:.85}
+nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+
+/* hero */
+.hero{background:var(--night);color:var(--paper);min-height:100svh;display:flex;align-items:center;position:relative;overflow:hidden;padding:6rem 0 3rem}
+.hero::before{content:"";position:absolute;inset:-20px;background:url("assets/phinius-njeru.jpg") center 20%/cover no-repeat;opacity:.22;filter:blur(3px);
+  -webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent 100%);mask-image:linear-gradient(to bottom,#000 55%,transparent 100%)}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:30%;background:linear-gradient(to top,var(--night),transparent);pointer-events:none}
+.hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+.portrait{position:relative;justify-self:center;width:min(100%,420px)}
+.portrait img{display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:6px;box-shadow:0 0 0 1px rgba(143,201,138,.25),0 30px 80px rgba(0,0,0,.6)}
+.hero h1{font-family:var(--display);font-weight:800;line-height:.92;letter-spacing:-.03em;font-size:clamp(3.4rem,10vw,8.2rem)}
+.hero h1 span{display:block}
+.hero h1 span+span{color:var(--hedge-soft)}
+.role{margin-top:1.6rem;font-size:1.25rem;color:var(--sand)}
+.role strong{font-weight:500;color:var(--paper)}
+.lede{margin-top:1rem;max-width:34rem;color:#c9d2c9}
+.cta{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
+.btn{display:inline-block;padding:.85rem 1.4rem;border-radius:999px;text-decoration:none;font-weight:500;border:1.5px solid var(--hedge-soft);transition:background .2s,color .2s}
+.btn.solid{background:var(--hedge-soft);color:var(--night)}
+.btn.solid:hover{background:var(--paper)}
+.btn.line:hover{background:rgba(143,201,138,.15)}
+.hero-in{animation:rise .9s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* sections */
+section{padding:5rem 0}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.05;letter-spacing:-.02em;margin-bottom:1.4rem}
+.message .wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:3rem}
+.message p{max-width:62ch;margin-bottom:1.1rem;font-size:1.15rem}
+.sign{margin-top:1.6rem;font-family:var(--display);font-weight:800;font-size:1.3rem}
+.sign small{display:block;font-family:var(--body);font-weight:400;font-size:.95rem;color:var(--muted)}
+
+.work{background:#e1e7dc}
+.work ul{list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:0 3rem}
+.work li{padding:1.3rem 0;border-top:2px solid var(--ink)}
+.work h3{font-family:var(--display);font-size:1.35rem;margin-bottom:.3rem}
+.work p{color:var(--muted);max-width:44ch}
+
+.reach{background:var(--night);color:var(--paper)}
+.reach .wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:end}
+.reach p{color:#c9d2c9;max-width:40ch}
+.phone{font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:-.01em;display:block;margin-bottom:1.2rem}
+
+footer{background:var(--night);color:#8d988f;padding:2rem 0 max(2rem,env(safe-area-inset-bottom));border-top:1px solid #1d2a20;font-size:.92rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.8rem}
+footer a{color:var(--hedge-soft)}
+
+@media (max-width:820px){
+  .message .wrap,.reach .wrap{grid-template-columns:1fr}
+  .hero .wrap{grid-template-columns:1fr}
+  .portrait{order:-1;width:min(72%,320px);margin-top:1rem}
+  .hero::before{opacity:.18}
+  .work ul{grid-template-columns:1fr}
+  nav a:not(:last-child){display:none}
+  section{padding:3.5rem 0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero-in{animation:none}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top">Loopcore Enterprises</a>
+    <nav aria-label="Main">
+      <a href="#message">Message</a>
+      <a href="#work">What we do</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-in">
+        <h1><span>Phinius</span><span>Njeru</span></h1>
+        <p class="role"><strong>General Director</strong>, Loopcore Enterprises</p>
+        <p class="lede">Reliable internet, smart systems and cyber services for homes and businesses. Connecting people to the digital world at fair prices.</p>
+        <div class="cta">
+          <a class="btn solid" href="https://wa.me/254794038671?text=Hello%20Phinius%2C%20I%20would%20like%20to%20get%20in%20touch%20with%20Loopcore%20Enterprises." rel="noopener">Message on WhatsApp</a>
+          <a class="btn line" href="https://loopcore.work" rel="noopener">See packages and prices</a>
+        </div>
+      </div>
+      <div class="portrait hero-in">
+        <img src="assets/phinius-njeru.jpg" width="853" height="1280" alt="Phinius Njeru standing between green hedges at night, wearing a dark Ecko tee and black jeans">
+      </div>
+    </div>
+  </div>
+
+  <section class="message" id="message">
+    <div class="wrap">
+      <h2>A word from the director</h2>
+      <div>
+        <p>Loopcore Enterprises exists to make a connected life simple and affordable. Whether you need home internet, a stable line for your business, a phone or laptop fixed, or help with KRA, NTSA and passport applications, you should be able to get it from one trusted team.</p>
+        <p>We keep our prices open, we answer on WhatsApp, and we negotiate fairly on custom work. If something is not working, tell us and we will fix it.</p>
+        <p class="sign">Phinius Njeru<small>General Director, Loopcore Enterprises</small></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="work" id="work">
+    <div class="wrap">
+      <h2>What Loopcore does</h2>
+      <ul>
+        <li><h3>Internet</h3><p>Monthly home and business packages, from 5 Mbps up to 250 Mbps, unlimited or data-capped.</p></li>
+        <li><h3>Networking devices</h3><p>Receivers and home routers, priced at the current market rate on request.</p></li>
+        <li><h3>Loopcore Solutions</h3><p>Phone and PC software repairs, screen lock and FRP removal, rooting, installations, troubleshooting and consultation.</p></li>
+        <li><h3>Cyber services</h3><p>Printing and photocopy, KRA and NTSA services, passport applications, and education help such as HELB and KUCCPS.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="reach" id="contact">
+    <div class="wrap">
+      <div>
+        <h2>Talk to us</h2>
+        <p>The quickest way to reach the director’s office is a WhatsApp message. Tell us what you need and we will reply with next steps.</p>
+      </div>
+      <div>
+        <a class="phone" href="tel:+254794038671">+254 794 038 671</a>
+        <a class="btn solid" href="https://wa.me/254794038671?text=Hello%20Loopcore%20Enterprises%2C%20I%20would%20like%20to%20make%20an%20enquiry." rel="noopener">Start a WhatsApp chat</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Loopcore Enterprises. All rights reserved.</span>
+    <span><a href="https://loopcore.work">loopcore.work</a> · <a href="https://loopcore.work/terms.html">Terms</a> · <a href="https://loopcore.work/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
