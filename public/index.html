@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BizLedger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1b2a24;--mute:#66736c;--paper:#f2f4ef;--panel:#fff;--rule:#d9ded6;--teal:#0e6b5c;--amber:#b8651b;--red:#a63a2e}
+@media (prefers-color-scheme:dark){:root{--ink:#e8ece6;--mute:#93a099;--paper:#121a16;--panel:#1a2420;--rule:#2b3832;--teal:#4fc3a8;--amber:#e39a55;--red:#e0766a}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 "Instrument Sans",system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+button,input,select{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:200px 1fr;min-height:100vh}
+nav{border-right:1px solid var(--rule);padding:20px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+nav h1{font-size:19px;margin:0 8px 16px;letter-spacing:-.02em}
+nav button{text-align:left;background:none;border:0;padding:9px 10px;border-radius:6px;cursor:pointer;color:var(--mute);font-weight:500}
+nav button.on{background:var(--panel);color:var(--ink);box-shadow:inset 3px 0 0 var(--teal)}
+nav .out{margin-top:auto}
+main{padding:28px;max-width:1000px;width:100%;min-width:0}
+h2{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 18px;flex-wrap:wrap}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:600}
+@media (prefers-color-scheme:dark){.btn{color:#0c1511}}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--rule)}
+.btn.sm{padding:3px 9px;font-size:13px;font-weight:500}
+.btn.del{color:var(--red)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.big{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0;border:1px solid var(--rule);background:var(--panel);border-radius:8px;margin-bottom:22px}
+.big div{padding:18px 20px;border-right:1px solid var(--rule)}
+.big div:last-child{border-right:0}
+.big b{display:block;font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.big span{color:var(--mute);font-size:13px}
+.tw{overflow-x:auto;background:var(--panel);border:1px solid var(--rule);border-radius:8px;margin-bottom:22px}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-size:13px;color:var(--mute);font-weight:500}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td.act{text-align:right;width:1%}
+.low{color:var(--amber);font-weight:600}
+.neg{color:var(--red)}
+.stamp{color:var(--mute);font-size:13px}
+.tools{display:flex;align-items:center;gap:8px}
+.empty{padding:28px;color:var(--mute);text-align:center}
+h3{font-size:16px;margin:0 0 8px}
+dialog{border:1px solid var(--rule);border-radius:10px;background:var(--panel);color:var(--ink);padding:22px;width:min(420px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+label{display:block;font-size:13px;color:var(--mute);margin:10px 0 3px}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--rule);border-radius:6px;background:var(--paper)}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.err{color:var(--red);font-size:13px;min-height:18px;margin-top:8px}
+#login,#reset{max-width:340px;margin:18vh auto;padding:24px}
+.ok{color:var(--teal);font-size:13px;min-height:18px;margin-top:8px}
+.pwrap{position:relative}.pwrap input{padding-right:42px}
+.eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--mute);cursor:pointer;padding:6px;display:flex;opacity:.6}
+.lnk{color:var(--teal);font-size:13px}
+@media (max-width:720px){.app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;min-height:0}nav{position:static;height:auto;flex-direction:row;align-items:center;overflow-x:auto;border-right:0;border-bottom:1px solid var(--rule);padding:8px 10px}nav h1{display:none}nav button{flex:none;white-space:nowrap}nav .out{margin:0 0 0 auto}main{padding:18px}.big div{border-right:0;border-bottom:1px solid var(--rule)}.big div:last-child{border-bottom:0}}
+</style>
+</head>
+<body>
+<div id="login" hidden>
+  <h2>BizLedger</h2>
+  <p style="color:var(--mute)">Sign in to see your stock, assets, expenses and accounts.</p>
+  <label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password">
+  <div class="err" id="lerr"></div><div class="ok" id="lok"></div>
+  <div class="row" style="justify-content:space-between;align-items:center"><a href="#" class="lnk" id="fg">Forgot password?</a><button class="btn" id="lgo">Sign in</button></div>
+</div>
+<div id="reset" hidden>
+  <h2>Set a new password</h2>
+  <label for="np">New password (at least 10 characters)</label><input id="np" type="password" autocomplete="new-password">
+  <label for="np2">Repeat password</label><input id="np2" type="password" autocomplete="new-password">
+  <div class="err" id="rerr"></div>
+  <div class="row"><button class="btn" id="rgo">Save new password</button></div>
+</div>
+<div class="app" id="app" hidden>
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<dialog id="dlg"><form method="dialog" id="frm"></form></dialog>
+<script>
+const $=s=>document.querySelector(s);
+const kes=n=>'KES '+Number(n||0).toLocaleString('en-KE',{maximumFractionDigits:2});
+const num=n=>Number(n||0).toLocaleString('en-KE',{maximumFractionDigits:2});
+const today=()=>new Date().toISOString().slice(0,10);
+let accounts=[],cur='overview',lastSync='';
+const DK={assets:'purchased',expenses:'date',transactions:'date'};
+const newest=(r,k)=>{const d=DK[k];return r.sort((a,b)=>(d?String(b[d]||'').localeCompare(String(a[d]||'')):0)||b.id-a.id)};
+const syncBtn=()=>`<span class="stamp">${lastSync?'Synced '+lastSync:''}</span><button class="btn ghost" data-s="1">Sync</button>`;
+
+// f: [key,label,type,default]
+const R={
+ items:{label:'Inventory',one:'item',f:[['name','Item','text'],['sku','SKU','text'],['qty','In stock','number',0],['unit','Unit','text','pcs'],['cost','Cost each','money',0],['price','Selling price','money',0],['reorder','Reorder at','number',0]]},
+ assets:{label:'Assets',one:'asset',f:[['name','Asset','text'],['category','Category','text'],['purchased','Date bought','date',today()],['cost','Cost','money',0],['notes','Notes','text']]},
+ expenses:{label:'Expenses',one:'expense',f:[['date','Date','date',today()],['category','Category','text'],['description','Description','text'],['amount','Amount','money',0],['account_id','Paid from','account']]},
+ accounts:{label:'Accounts',one:'account',f:[['name','Account name','text'],['type','Type','text','Cash'],['opening','Opening balance','money',0]]},
+ transactions:{label:'Money in and out',one:'entry',f:[['account_id','Account','account'],['date','Date','date',today()],['description','Description','text'],['amount','Amount (+ in, − out)','money',0]]}
+};
+
+async function api(p,method='GET',body){
+  const r=await fetch('/api/'+p,{method,headers:{'content-type':'application/json'},body:body&&JSON.stringify(body)});
+  if(r.status===401&&p!=='login'){showLogin();throw new Error('auth')}
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(d.error||'Request failed');
+  return d;
+}
+function showLogin(){$('#app').hidden=true;$('#login').hidden=false;$('#pw').focus()}
+$('#lgo').onclick=login;$('#pw').onkeydown=e=>e.key==='Enter'&&login();
+async function login(){
+  try{await api('login','POST',{password:$('#pw').value.trim()});$('#login').hidden=true;$('#pw').value='';boot()}
+  catch(e){$('#lerr').textContent=e.message}
+}
+let rtoken='';
+function showReset(){rtoken=location.hash.slice(7);history.replaceState(null,'',location.pathname+location.search);$('#app').hidden=true;$('#login').hidden=true;$('#reset').hidden=false;$('#np').focus()}
+$('#fg').onclick=async e=>{e.preventDefault();$('#lerr').textContent='';$('#lok').textContent='Sending...';
+  try{await api('forgot','POST',{});$('#lok').textContent='A reset link was sent to your saved email. It works once for 15 minutes. Check spam too.'}
+  catch(x){$('#lok').textContent='';$('#lerr').textContent=x.message}};
+$('#rgo').onclick=async()=>{const a=$('#np').value.trim();$('#rerr').textContent='';
+  if(a.length<10){$('#rerr').textContent='Use at least 10 characters.';return}
+  if(a!==$('#np2').value.trim()){$('#rerr').textContent='The two passwords do not match.';return}
+  try{await api('reset','POST',{token:rtoken,password:a});$('#reset').hidden=true;$('#login').hidden=false;$('#lok').textContent='Password updated. Sign in with your new password.';$('#pw').focus()}
+  catch(x){$('#rerr').textContent=x.message}};
+const EYE='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+function eyeify(i){i.setAttribute('autocapitalize','off');i.setAttribute('autocorrect','off');i.spellcheck=false;
+  const w=document.createElement('div');w.className='pwrap';i.parentNode.insertBefore(w,i);w.appendChild(i);
+  const b=document.createElement('button');b.type='button';b.className='eye';b.innerHTML=EYE;b.setAttribute('aria-label','Show password');
+  b.onclick=()=>{const s=i.type==='password';i.type=s?'text':'password';b.style.opacity=s?1:.6;b.setAttribute('aria-label',s?'Hide password':'Show password')};
+  w.appendChild(b)}
+['#pw','#np','#np2'].forEach(x=>eyeify($(x)));
+const sdlg=document.createElement('dialog');document.body.appendChild(sdlg);
+async function openSettings(){
+  let prot=true;try{prot=(await api('security')).protected}catch(e){}
+  sdlg.innerHTML=`<h3>Change password</h3>
+  <label for="cp">Current password</label><input id="cp" type="password" autocomplete="current-password">
+  <label for="cn">New password (at least 10 characters)</label><input id="cn" type="password" autocomplete="new-password">
+  <label for="cn2">Repeat new password</label><input id="cn2" type="password" autocomplete="new-password">
+  <div class="row"><button class="btn" id="spw">Change password</button></div>
+  <hr style="border:0;border-top:1px solid var(--rule);margin:18px 0">
+  <h3>Sign-in protection</h3>
+  <p style="color:var(--mute);margin:0 0 10px">${prot?'The password is <b>on</b>.':'The password is <b style="color:var(--red)">off</b>: anyone with the link can see and change your records.'}</p>
+  <button class="btn ghost ${prot?'del':''}" id="stog">${prot?'Turn off password':'Turn password back on'}</button>
+  <div class="err" id="serr"></div><div class="ok" id="sok"></div>
+  <div class="row"><button class="btn ghost" id="sx">Close</button></div>`;
+  ['#cp','#cn','#cn2'].forEach(x=>eyeify($(x)));
+  const msg=(e,o)=>{$('#serr').textContent=e||'';$('#sok').textContent=o||''};
+  $('#sx').onclick=()=>sdlg.close();
+  $('#spw').onclick=async()=>{const n=$('#cn').value.trim();
+    if(n.length<10)return msg('Use at least 10 characters.');
+    if(n!==$('#cn2').value.trim())return msg('The new passwords do not match.');
+    try{await api('password','POST',{current:$('#cp').value.trim(),password:n});$('#cp').value=$('#cn').value=$('#cn2').value='';msg('','Password changed.')}catch(x){msg(x.message)}};
+  $('#stog').onclick=async()=>{
+    if(prot){
+      if(!$('#cp').value.trim())return msg('Type your current password in the first box to turn it off.');
+      if(!confirm('Turn OFF the password? Anyone who has the link will be able to see, change and delete your records.'))return;
+      try{await api('security','POST',{enable:false,current:$('#cp').value.trim()});$('#out').hidden=true;sdlg.close()}catch(x){msg(x.message)}
+    }else{try{await api('security','POST',{enable:true});$('#out').hidden=false;sdlg.close()}catch(x){msg(x.message)}}};
+  sdlg.showModal();
+}
+function boot(){
+  $('#app').hidden=false;
+  const tabs=[['overview','Overview'],['items','Inventory'],['assets','Assets'],['expenses','Expenses'],['accounts','Accounts']];
+  $('#nav').innerHTML='<h1>BizLedger</h1>'+tabs.map(([k,l])=>`<button data-k="${k}">${l}</button>`).join('')+'<button class="out" id="set">Settings</button><button id="out">Sign out</button>';
+  $('#nav').onclick=e=>{const k=e.target.dataset.k;if(k)go(k)};
+  $('#out').onclick=async()=>{await api('logout','POST');showLogin()};
+  $('#set').onclick=openSettings;
+  api('security').then(x=>{if(!x.protected)$('#out').hidden=true}).catch(()=>{});
+  go(cur);
+}
+async function go(k){
+  cur=k;lastSync=new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
+  document.querySelectorAll('#nav [data-k]').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  try{
+    if(k==='overview')return await overview();
+    if(k==='accounts')return await accountsView();
+    await listView(k);
+  }catch(e){if(e.message!=='auth')$('#main').innerHTML=`<p class="err">${e.message}</p>`}
+}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const accName=id=>(accounts.find(a=>a.id==id)||{}).name||'';
+
+async function overview(){
+  const s=await api('summary');accounts=s.accounts;
+  $('#main').innerHTML=`<div class="bar"><h2>Overview</h2><div class="tools">${syncBtn()}</div></div>
+  <div class="big">
+   <div><b>${kes(s.stock)}</b><span>Stock value at cost</span></div>
+   <div><b>${kes(s.assets)}</b><span>Assets bought</span></div>
+   <div><b>${kes(s.spent)}</b><span>Spent this month</span></div>
+   <div><b class="${s.low?'low':''}">${s.low}</b><span>Items at or below reorder level</span></div>
+  </div>
+  <h3>Account balances</h3>${accTable(s.accounts)}`;
+}
+function accTable(rows){
+  if(!rows.length)return '<div class="tw"><div class="empty">No accounts yet. Add one under Accounts, such as Cash, M-Pesa or Bank.</div></div>';
+  return `<div class="tw"><table><thead><tr><th>Account</th><th>Type</th><th class="n">Balance</th></tr></thead><tbody>${rows.map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.type)}</td><td class="n ${a.balance<0?'neg':''}">${kes(a.balance)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function table(k,rows,extra){
+  const c=R[k];
+  if(!rows.length)return `<div class="tw"><div class="empty">No ${c.label.toLowerCase()} yet. Use the Add button to record your first ${c.one}.</div></div>`;
+  const head=c.f.map(([,l,t])=>`<th class="${t==='money'||t==='number'?'n':''}">${l.replace(/ \(.*/,'')}</th>`).join('')+(extra?'<th class="n">Balance</th>':'')+'<th></th>';
+  const body=rows.map(r=>`<tr>${c.f.map(([key,,t])=>{
+    let v=r[key];
+    if(t==='money')v=num(v);else if(t==='number')v=num(v);else if(t==='account')v=esc(accName(v));else v=esc(v);
+    let cls=t==='money'||t==='number'?'n':'';
+    if(k==='items'&&key==='qty'&&r.reorder>0&&r.qty<=r.reorder)cls+=' low';
+    if(k==='transactions'&&key==='amount'&&r.amount<0)cls+=' neg';
+    return `<td class="${cls}">${v}</td>`}).join('')}${extra?`<td class="n ${extra(r)<0?'neg':''}">${num(extra(r))}</td>`:''}
+    <td class="act"><button class="btn ghost sm" data-e="${k}:${r.id}">Edit</button> <button class="btn ghost sm del" data-d="${k}:${r.id}">Delete</button></td></tr>`).join('');
+  return `<div class="tw"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+}
+let cache={};
+async function listView(k){
+  if(k==='expenses')accounts=(await api('summary')).accounts;
+  const rows=cache[k]=newest(await api(k),k);
+  $('#main').innerHTML=`<div class="bar"><h2>${R[k].label}</h2><div class="tools">${syncBtn()}<button class="btn" data-a="${k}">Add ${R[k].one}</button></div></div>${table(k,rows)}`;
+}
+async function accountsView(){
+  const s=await api('summary');accounts=s.accounts;
+  const bal=Object.fromEntries(accounts.map(a=>[a.id,a.balance]));
+  cache.accounts=newest(await api('accounts'),'accounts');cache.transactions=newest(await api('transactions'),'transactions');
+  $('#main').innerHTML=`<div class="bar"><h2>Accounts</h2><div class="tools">${syncBtn()}<button class="btn" data-a="accounts">Add account</button></div></div>
+   ${table('accounts',cache.accounts,r=>bal[r.id]||0)}
+   <div class="bar"><h3>Money in and out</h3><button class="btn ghost" data-a="transactions">Add entry</button></div>
+   ${table('transactions',cache.transactions)}
+   <p style="color:var(--mute);font-size:13px">Balance = opening balance + entries − expenses paid from that account.</p>`;
+}
+$('#main').onclick=e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.s){b.textContent='Syncing…';go(cur);return}
+  if(b.dataset.a)form(b.dataset.a);
+  if(b.dataset.e){const[k,id]=b.dataset.e.split(':');form(k,cache[k].find(r=>r.id==id))}
+  if(b.dataset.d){const[k,id]=b.dataset.d.split(':');if(confirm('Delete this '+R[k].one+'? This cannot be undone.'))api(`${k}/${id}`,'DELETE').then(()=>go(cur)).catch(x=>alert(x.message))}
+};
+async function form(k,row){
+  if(!accounts.length&&R[k].f.some(f=>f[2]==='account'))accounts=(await api('summary')).accounts;
+  const c=R[k];
+  $('#frm').innerHTML=`<h3>${row?'Edit':'Add'} ${c.one}</h3>`+c.f.map(([key,l,t,d])=>{
+    const v=row?row[key]:d;
+    if(t==='account')return `<label>${l}</label><select name="${key}">${k==='expenses'?'<option value="">Not tracked</option>':''}${accounts.map(a=>`<option value="${a.id}" ${a.id==v?'selected':''}>${esc(a.name)}</option>`).join('')}</select>`;
+    const it=t==='money'||t==='number'?'number" step="any':t;
+    return `<label>${l}</label><input name="${key}" type="${it}" value="${esc(v)}" ${key==='name'||key==='date'?'required':''}>`}).join('')+
+    `<div class="err" id="ferr"></div><div class="row"><button type="button" class="btn ghost" id="fc">Cancel</button><button class="btn" id="fs" type="submit">Save</button></div>`;
+  $('#dlg').showModal();
+  $('#fc').onclick=()=>$('#dlg').close();
+  $('#frm').onsubmit=async e=>{
+    e.preventDefault();
+    const o={};new FormData($('#frm')).forEach((v,key)=>{const t=c.f.find(f=>f[0]===key)[2];o[key]=(t==='money'||t==='number')?Number(v||0):v});
+    if(k==='transactions'&&!o.account_id){$('#ferr').textContent='Add an account first.';return}
+    try{await api(row?`${k}/${row.id}`:k,row?'PUT':'POST',o);$('#dlg').close();go(cur)}
+    catch(x){$('#ferr').textContent=x.message}
+  };
+}
+(location.hash.startsWith('#reset=')?Promise.resolve(showReset()).then(()=>{throw new Error('auth')}):api('summary').then(()=>boot())).catch(e=>{if(e.message!=='auth')document.body.innerHTML='<p style="padding:24px">'+esc(e.message)+'</p>'});
+</script>
+</body>
+</html>
